@@ -1,0 +1,416 @@
+--------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  L:\ECOps3.log
+  log type:  text
+ opened on:  20 Feb 2018, 22:57:39
+
+. 
+. *Problem 4.C1
+. bcuse vote1
+
+Contains data from http://fmwww.bc.edu/ec-p/data/wooldridge/vote1.dta
+  obs:           173                          
+ vars:            10                          26 Jan 2000 12:16
+ size:         6,920                          
+--------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------
+state           float   %9.0g                 
+district        float   %9.0g                 
+democA          float   %9.0g                 
+voteA           float   %9.0g                 
+expendA         float   %9.0g                 
+expendB         float   %9.0g                 
+prtystrA        float   %9.0g                 
+lexpendA        float   %9.0g                 
+lexpendB        float   %9.0g                 
+shareA          float   %9.0g                 
+--------------------------------------------------------------------------------
+Sorted by: 
+
+. reg voteA expendA expendB prtystrA
+
+      Source |       SS           df       MS      Number of obs   =       173
+-------------+----------------------------------   F(3, 169)       =     74.27
+       Model |  27555.6195         3  9185.20651   Prob > F        =    0.0000
+    Residual |   20901.629       169  123.678278   R-squared       =    0.5687
+-------------+----------------------------------   Adj R-squared   =    0.5610
+       Total |  48457.2486       172  281.728189   Root MSE        =    11.121
+
+------------------------------------------------------------------------------
+       voteA |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     expendA |   .0349245   .0033695    10.36   0.000     .0282728    .0415762
+     expendB |  -.0349236   .0030012   -11.64   0.000    -.0408483   -.0289989
+    prtystrA |   .3425152   .0879518     3.89   0.000     .1688895    .5161408
+       _cons |   33.26712   4.416778     7.53   0.000     24.54796    41.98629
+------------------------------------------------------------------------------
+
+. gen part4=expendA+expendB
+
+. ttest part4=0
+
+One-sample t test
+------------------------------------------------------------------------------
+Variable |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+   part4 |     173    615.6995    37.02259    486.9562    542.6224    688.7767
+------------------------------------------------------------------------------
+    mean = mean(part4)                                            t =  16.6304
+Ho: mean = 0                                     degrees of freedom =      172
+
+    Ha: mean < 0                 Ha: mean != 0                 Ha: mean > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 0.0000
+
+. 
+. clear
+
+. *Problem 4.C3
+. bcuse hprice1
+
+Contains data from http://fmwww.bc.edu/ec-p/data/wooldridge/hprice1.dta
+  obs:            88                          
+ vars:            10                          17 Mar 2002 12:21
+ size:         2,816                          
+--------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------
+price           float   %9.0g                 house price, $1000s
+assess          float   %9.0g                 assessed value, $1000s
+bdrms           byte    %9.0g                 number of bdrms
+lotsize         float   %9.0g                 size of lot in square feet
+sqrft           int     %9.0g                 size of house in square feet
+colonial        byte    %9.0g                 =1 if home is colonial style
+lprice          float   %9.0g                 log(price)
+lassess         float   %9.0g                 log(assess
+llotsize        float   %9.0g                 log(lotsize)
+lsqrft          float   %9.0g                 log(sqrft)
+--------------------------------------------------------------------------------
+Sorted by: 
+
+. reg lprice sqrft bdrms
+
+      Source |       SS           df       MS      Number of obs   =        88
+-------------+----------------------------------   F(2, 85)        =     60.73
+       Model |  4.71671468         2  2.35835734   Prob > F        =    0.0000
+    Residual |  3.30088884        85  .038833986   R-squared       =    0.5883
+-------------+----------------------------------   Adj R-squared   =    0.5786
+       Total |  8.01760352        87  .092156362   Root MSE        =    .19706
+
+------------------------------------------------------------------------------
+      lprice |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       sqrft |   .0003794   .0000432     8.78   0.000     .0002935    .0004654
+       bdrms |   .0288844   .0296433     0.97   0.333    -.0300543    .0878232
+       _cons |   4.766027   .0970445    49.11   0.000     4.573077    4.958978
+------------------------------------------------------------------------------
+
+. disp 150*.0003794+.0288844
+.0857944
+
+. 
+. gen k=sqrft-150*bdrms
+
+. reg lprice k bdrms
+
+      Source |       SS           df       MS      Number of obs   =        88
+-------------+----------------------------------   F(2, 85)        =     60.73
+       Model |  4.71671468         2  2.35835734   Prob > F        =    0.0000
+    Residual |  3.30088884        85  .038833986   R-squared       =    0.5883
+-------------+----------------------------------   Adj R-squared   =    0.5786
+       Total |  8.01760352        87  .092156362   Root MSE        =    .19706
+
+------------------------------------------------------------------------------
+      lprice |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           k |   .0003794   .0000432     8.78   0.000     .0002935    .0004654
+       bdrms |   .0858013   .0267675     3.21   0.002     .0325804    .1390223
+       _cons |   4.766027   .0970445    49.11   0.000     4.573077    4.958978
+------------------------------------------------------------------------------
+
+. disp .0857944 + 1.96*.0267675
+.1382587
+
+. disp .0857944 - 1.96*.0267675
+.0333301
+
+. 
+. clear
+
+. *Prob 4.C5
+. 
+. bcuse mlb1 
+
+Contains data from http://fmwww.bc.edu/ec-p/data/wooldridge/mlb1.dta
+  obs:           353                          
+ vars:            47                          26 Jan 2000 12:16
+ size:        66,364                          
+--------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------
+salary          float   %9.0g                 
+teamsal         float   %9.0g                 
+nl              float   %9.0g                 
+years           float   %9.0g                 
+games           float   %9.0g                 
+atbats          float   %9.0g                 
+runs            float   %9.0g                 
+hits            float   %9.0g                 
+doubles         float   %9.0g                 
+triples         float   %9.0g                 
+hruns           float   %9.0g                 
+rbis            float   %9.0g                 
+bavg            float   %9.0g                 
+bb              float   %9.0g                 
+so              float   %9.0g                 
+sbases          float   %9.0g                 
+fldperc         float   %9.0g                 
+frstbase        float   %9.0g                 
+scndbase        float   %9.0g                 
+shrtstop        float   %9.0g                 
+thrdbase        float   %9.0g                 
+outfield        float   %9.0g                 
+catcher         float   %9.0g                 
+yrsallst        float   %9.0g                 
+hispan          float   %9.0g                 
+black           float   %9.0g                 
+whitepop        float   %9.0g                 
+blackpop        float   %9.0g                 
+hisppop         float   %9.0g                 
+pcinc           float   %9.0g                 
+gamesyr         float   %9.0g                 
+hrunsyr         float   %9.0g                 
+atbatsyr        float   %9.0g                 
+allstar         float   %9.0g                 
+slugavg         float   %9.0g                 
+rbisyr          float   %9.0g                 
+sbasesyr        float   %9.0g                 
+runsyr          float   %9.0g                 
+percwhte        float   %9.0g                 
+percblck        float   %9.0g                 
+perchisp        float   %9.0g                 
+blckpb          float   %9.0g                 
+hispph          float   %9.0g                 
+whtepw          float   %9.0g                 
+blckph          float   %9.0g                 
+hisppb          float   %9.0g                 
+lsalary         float   %9.0g                 
+--------------------------------------------------------------------------------
+Sorted by: 
+
+. reg lsalary years gamesyr bavg hrunsyr
+
+      Source |       SS           df       MS      Number of obs   =       353
+-------------+----------------------------------   F(4, 348)       =    145.24
+       Model |  307.800712         4   76.950178   Prob > F        =    0.0000
+    Residual |  184.374856       348  .529812806   R-squared       =    0.6254
+-------------+----------------------------------   Adj R-squared   =    0.6211
+       Total |  492.175568       352  1.39822605   Root MSE        =    .72788
+
+------------------------------------------------------------------------------
+     lsalary |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       years |   .0677325   .0121128     5.59   0.000     .0439089     .091556
+     gamesyr |   .0157595   .0015636    10.08   0.000     .0126841    .0188348
+        bavg |   .0014185   .0010658     1.33   0.184    -.0006776    .0035146
+     hrunsyr |   .0359435   .0072408     4.96   0.000     .0217022    .0501847
+       _cons |   11.02091   .2657191    41.48   0.000      10.4983    11.54353
+------------------------------------------------------------------------------
+
+. reg lsalary years gamesyr bavg hrunsyr runsyr fldperc sbasesyr
+
+      Source |       SS           df       MS      Number of obs   =       353
+-------------+----------------------------------   F(7, 345)       =     87.25
+       Model |  314.510484         7  44.9300691   Prob > F        =    0.0000
+    Residual |  177.665085       345   .51497126   R-squared       =    0.6390
+-------------+----------------------------------   Adj R-squared   =    0.6317
+       Total |  492.175568       352  1.39822605   Root MSE        =    .71761
+
+------------------------------------------------------------------------------
+     lsalary |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       years |   .0699848   .0119756     5.84   0.000     .0464305     .093539
+     gamesyr |   .0078995   .0026775     2.95   0.003     .0026333    .0131657
+        bavg |   .0005296   .0011038     0.48   0.632    -.0016414    .0027007
+     hrunsyr |   .0232107   .0086392     2.69   0.008     .0062186    .0402028
+      runsyr |   .0173921   .0050641     3.43   0.001     .0074318    .0273525
+     fldperc |   .0010351   .0020046     0.52   0.606    -.0029077    .0049778
+    sbasesyr |  -.0064191   .0051842    -1.24   0.216    -.0166156    .0037775
+       _cons |   10.40827   2.003255     5.20   0.000     6.468142     14.3484
+------------------------------------------------------------------------------
+
+. 
+. test runsyr
+
+ ( 1)  runsyr = 0
+
+       F(  1,   345) =   11.80
+            Prob > F =    0.0007
+
+. test fldperc
+
+ ( 1)  fldperc = 0
+
+       F(  1,   345) =    0.27
+            Prob > F =    0.6059
+
+. test sbasesyr
+
+ ( 1)  sbasesyr = 0
+
+       F(  1,   345) =    1.53
+            Prob > F =    0.2165
+
+. 
+. test bavg fldperc sbasesyr
+
+ ( 1)  bavg = 0
+ ( 2)  fldperc = 0
+ ( 3)  sbasesyr = 0
+
+       F(  3,   345) =    0.68
+            Prob > F =    0.5617
+
+. 
+. clear
+
+. *Problem 4.C9
+. bcuse discrim
+
+Contains data from http://fmwww.bc.edu/ec-p/data/wooldridge/discrim.dta
+  obs:           410                          
+ vars:            37                          8 Jan 2002 22:26
+ size:        47,150                          
+--------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------
+psoda           float   %9.0g                 price of medium soda, 1st wave
+pfries          float   %9.0g                 price of small fries, 1st wave
+pentree         float   %9.0g                 price entree (burger or chicken),
+                                                1st wave
+wagest          float   %9.0g                 starting wage, 1st wave
+nmgrs           float   %9.0g                 number of managers, 1st wave
+nregs           byte    %9.0g                 number of registers, 1st wave
+hrsopen         float   %9.0g                 hours open, 1st wave
+emp             float   %9.0g                 number of employees, 1st wave
+psoda2          float   %9.0g                 price of medium soday, 2nd wave
+pfries2         float   %9.0g                 price of small fries, 2nd wave
+pentree2        float   %9.0g                 price entree, 2nd wave
+wagest2         float   %9.0g                 starting wage, 2nd wave
+nmgrs2          float   %9.0g                 number of managers, 2nd wave
+nregs2          byte    %9.0g                 number of registers, 2nd wave
+hrsopen2        float   %9.0g                 hours open, 2nd wave
+emp2            float   %9.0g                 number of employees, 2nd wave
+compown         byte    %9.0g                 =1 if company owned
+chain           byte    %9.0g                 BK = 1, KFC = 2, Roy Rogers = 3,
+                                                Wendy's = 4
+density         float   %9.0g                 population density, town
+crmrte          float   %9.0g                 crime rate, town
+state           byte    %9.0g                 NJ = 1, PA = 2
+prpblck         float   %9.0g                 proportion black, zipcode
+prppov          float   %9.0g                 proportion in poverty, zipcode
+prpncar         float   %9.0g                 proportion no car, zipcode
+hseval          float   %9.0g                 median housing value, zipcode
+nstores         byte    %9.0g                 number of stores, zipcode
+income          float   %9.0g                 median family income, zipcode
+county          byte    %9.0g                 county label
+lpsoda          float   %9.0g                 log(psoda)
+lpfries         float   %9.0g                 log(pfries)
+lhseval         float   %9.0g                 log(hseval)
+lincome         float   %9.0g                 log(income)
+ldensity        float   %9.0g                 log(density)
+NJ              byte    %9.0g                 =1 for New Jersey
+BK              byte    %9.0g                 =1 if Burger King
+KFC             byte    %9.0g                 =1 if Kentucky Fried Chicken
+RR              byte    %9.0g                 =1 if Roy Rogers
+--------------------------------------------------------------------------------
+Sorted by: 
+
+. reg lpsoda prpblck lincome prppov
+
+      Source |       SS           df       MS      Number of obs   =       401
+-------------+----------------------------------   F(3, 397)       =     12.60
+       Model |  .250340622         3  .083446874   Prob > F        =    0.0000
+    Residual |  2.62840943       397  .006620679   R-squared       =    0.0870
+-------------+----------------------------------   Adj R-squared   =    0.0801
+       Total |  2.87875005       400  .007196875   Root MSE        =    .08137
+
+------------------------------------------------------------------------------
+      lpsoda |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     prpblck |   .0728072   .0306756     2.37   0.018     .0125003    .1331141
+     lincome |   .1369553   .0267554     5.12   0.000     .0843552    .1895553
+      prppov |     .38036   .1327903     2.86   0.004     .1192999    .6414201
+       _cons |  -1.463333   .2937111    -4.98   0.000    -2.040756   -.8859092
+------------------------------------------------------------------------------
+
+. corr lincome prppov
+(obs=409)
+
+             |  lincome   prppov
+-------------+------------------
+     lincome |   1.0000
+      prppov |  -0.8385   1.0000
+
+
+. test lincome
+
+ ( 1)  lincome = 0
+
+       F(  1,   397) =   26.20
+            Prob > F =    0.0000
+
+. test prppov
+
+ ( 1)  prppov = 0
+
+       F(  1,   397) =    8.20
+            Prob > F =    0.0044
+
+. 
+. reg lpsoda prpblck lincome prppov lhseval
+
+      Source |       SS           df       MS      Number of obs   =       401
+-------------+----------------------------------   F(4, 396)       =     22.31
+       Model |  .529488085         4  .132372021   Prob > F        =    0.0000
+    Residual |  2.34926197       396   .00593248   R-squared       =    0.1839
+-------------+----------------------------------   Adj R-squared   =    0.1757
+       Total |  2.87875005       400  .007196875   Root MSE        =    .07702
+
+------------------------------------------------------------------------------
+      lpsoda |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     prpblck |   .0975502   .0292607     3.33   0.001     .0400244     .155076
+     lincome |  -.0529904   .0375261    -1.41   0.159    -.1267657    .0207848
+      prppov |   .0521229   .1344992     0.39   0.699    -.2122989    .3165447
+     lhseval |   .1213056   .0176841     6.86   0.000     .0865392    .1560721
+       _cons |  -.8415149   .2924318    -2.88   0.004    -1.416428   -.2666019
+------------------------------------------------------------------------------
+
+. test lhseval
+
+ ( 1)  lhseval = 0
+
+       F(  1,   396) =   47.05
+            Prob > F =    0.0000
+
+. test lincome
+
+ ( 1)  lincome = 0
+
+       F(  1,   396) =    1.99
+            Prob > F =    0.1587
+
+. test prppov
+
+ ( 1)  prppov = 0
+
+       F(  1,   396) =    0.15
+            Prob > F =    0.6986
+
+. 
+. capture log close
